@@ -1,0 +1,110 @@
+{
+  "realm" : "beautyProfile",
+  "users" : [ {
+    "id" : "b1c6eab8-9464-4f21-b983-b0accae96440",
+    "createdTimestamp" : 1591843372371,
+    "username" : "cbp_uat",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "credentials" : [ {
+      "id" : "7c583798-cb6d-42d5-a917-efd891bf10a7",
+      "type" : "password",
+      "createdDate" : 1591843557710,
+      "secretData" : "{\"value\":\"eAxVLgT+GWwvnaj4IXnEVE4ajMleE/U87BnkCRww93WvJyEaSMN0oR8TI37lkGJJBLZ+hz1mkK8buNUbddZcNQ==\",\"salt\":\"MP2t3Z9IrDVSOk88b6URzA==\"}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "7678e97d-3d91-4608-9317-3b3ce14c7d50",
+    "createdTimestamp" : 1591843580616,
+    "username" : "cce_uat",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "credentials" : [ {
+      "id" : "e83dcfd8-07dd-49dc-9a5d-f899a75831b4",
+      "type" : "password",
+      "createdDate" : 1591843652615,
+      "secretData" : "{\"value\":\"oYdJ2qERMdeVtXKXFZbbFQ0VF3X+zv02z6upZYOVpLWvZetOB+BCsxAYmDRO8hgLxoJtOJyqwoi5DhZyH6Cydw==\",\"salt\":\"Rmrh94wqkQ0BlygNaiYuUw==\"}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "e5e73ecd-97f1-4000-8e83-9969e8847e26",
+    "createdTimestamp" : 1599731403051,
+    "username" : "connext_uat",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "credentials" : [ {
+      "id" : "17e6b01a-b854-4c00-98d3-b47b5ac33865",
+      "type" : "password",
+      "createdDate" : 1599731627588,
+      "secretData" : "{\"value\":\"yvan9vmrOIifTA408EG6zrohO63VYYZscli2pHGYb9p1JTakTKqD2tutZwUNKcQo5vQbvN0Ok3UoGxpiPx5WMA==\",\"salt\":\"4/dwqxDzMyPj/UVCCvOVbQ==\"}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "eba20e1a-81a5-4aa7-9bea-9da7a90c53ea",
+    "createdTimestamp" : 1591777113008,
+    "username" : "service-account-bp_test_client",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "serviceAccountClientId" : "bp_test_client",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "bp_test_client" : [ "uma_protection" ],
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "c973ae6b-40c6-49b1-9374-043b4ae32da1",
+    "createdTimestamp" : 1591843675083,
+    "username" : "wechat_uat",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "credentials" : [ {
+      "id" : "e4a59bb7-b033-479f-9d9c-aa5828667ba6",
+      "type" : "password",
+      "createdDate" : 1591843725592,
+      "secretData" : "{\"value\":\"sg5+OaKiUSe2HbYHYlxSmxXDITIHdqacMHeNCjuTTBb+G9f73vCaN1DYoCreSfqtg4emUGeykzqGl9YyfOGCJw==\",\"salt\":\"Kv8qcrPeNODBu87pS3h+oA==\"}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}

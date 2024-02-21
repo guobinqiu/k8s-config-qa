@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cuckoofilter
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cuckoofilter
+  template:
+    metadata:
+      labels:
+        name: cuckoofilter
+    spec:
+      containers:
+      - name: cuckoofilter
+        image: stagingacr.azurecr.cn/cuckoofilter:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 50051
+          protocol: TCP
+        envFrom:
+        - secretRef:
+            name: azure-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cuckoofilter
+  namespace: kube-ops
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 50051
+    targetPort: 50051
+    protocol: TCP
+  selector:
+    name: cuckoofilter
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cuckoofilter-internal
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - port: 50051
+    targetPort: 50051
+    protocol: TCP
+  selector:
+    name: cuckoofilter

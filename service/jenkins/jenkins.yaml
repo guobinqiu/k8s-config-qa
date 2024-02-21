@@ -1,0 +1,72 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: jenkins-sc
+provisioner: kubernetes.io/azure-file
+allowVolumeExpansion: true
+mountOptions:
+- dir_mode=0755
+- file_mode=0600
+- uid=1000
+- gid=1000
+- mfsymlinks
+- cache=strict
+- actimeo=30
+parameters:
+  skuName: Standard_LRS
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-pvc
+  namespace: kube-ops
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: jenkins-sc
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts-jdk11
+        env:
+        - name: JENKINS_OPTS
+          value: "--prefix=/jenkins"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+      volumes:
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+  selector:
+    app: jenkins

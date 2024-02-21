@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: tidb
+  namespace: kube-ops
+subsets:
+- addresses:
+  - ip: 10.162.160.80
+  ports:
+  - port: 4000
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tidb
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - port: 4000
+    targetPort: 4000
+    protocol: TCP

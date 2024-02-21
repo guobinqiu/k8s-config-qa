@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coupon-bio-api
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: coupon-bio-api
+  template:
+    metadata:
+      labels:
+        name: coupon-bio-api
+    spec:
+      containers:
+      - name: coupon-bio-api
+        image: stagingacr.azurecr.cn/coupon-bio-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8091
+        envFrom:
+        - secretRef:
+            name: azure-env
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coupon-bio-api
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8091
+  selector:
+    name: coupon-bio-api
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: coupon-bio-api
+  namespace: kube-ops
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coupon-bio-api
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50

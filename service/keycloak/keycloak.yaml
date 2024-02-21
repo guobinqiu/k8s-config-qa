@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-pvc2
+  namespace: kube-ops
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: azurefile
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: kube-ops
+  labels:
+    app: keycloak
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: keycloak
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: kube-ops
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - name: keycloak
+        image: jboss/keycloak
+        env:
+        - name: KEYCLOAK_USER
+          value: admin
+        - name: KEYCLOAK_PASSWORD
+          value: admin
+        - name: DB_VENDOR
+          value: postgres
+        - name: DB_ADDR
+          value: postgresql
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          value: deploy
+        - name: DB_PASSWORD
+          value: passw0rd
+        - name: DB_DATABASE
+          value: keycloak
+        - name: KEYCLOAK_FRONTEND_URL
+          value: "https://uat-cn.loreal.wans/keycloak/auth/"
+        - name: JAVA_OPTS_APPEND
+          value: "-Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/tmp/keycloak-export -Dkeycloak.migration.strategy=OVERWRITE_EXISTING -Dkeycloak.migration.usersExportStrategy=SAME_FILE"
+        ports:
+        - name: http
+          containerPort: 8080
+        - name: https
+          containerPort: 8443
+        readinessProbe:
+          httpGet:
+            path: /auth/realms/master
+            port: 8080
+        volumeMounts:
+        - name: data
+          mountPath: /tmp/keycloak-export
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: keycloak-pvc2

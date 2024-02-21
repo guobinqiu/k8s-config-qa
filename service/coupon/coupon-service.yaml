@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coupon-service
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: coupon-service
+  template:
+    metadata:
+      labels:
+        name: coupon-service
+    spec:
+      containers:
+      - name: coupon-service
+        image: stagingacr.azurecr.cn/coupon-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 1503
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coupon-service
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 1503
+  selector:
+    name: coupon-service
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: coupon-service
+  namespace: kube-ops
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coupon-service
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50

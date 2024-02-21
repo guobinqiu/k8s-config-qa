@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coupon-lan-api
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: coupon-lan-api
+  template:
+    metadata:
+      labels:
+        name: coupon-lan-api
+    spec:
+      containers:
+      - name: coupon-lan-api
+        image: stagingacr.azurecr.cn/coupon-lan-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8092
+        envFrom:
+        - secretRef:
+            name: azure-env
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coupon-lan-api
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8092
+  selector:
+    name: coupon-lan-api
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: coupon-lan-api
+  namespace: kube-ops
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coupon-lan-api
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50

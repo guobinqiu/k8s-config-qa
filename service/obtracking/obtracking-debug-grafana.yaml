@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obtracking-debug-grafana
+  namespace: kube-ops
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  replicas: 1
+  selector:
+    matchLabels:
+      name: obtracking-debug-grafana
+  template:
+    metadata:
+      labels:
+        name: obtracking-debug-grafana
+    spec:
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+          - 0
+      containers:
+      - name: grafana
+        image: grafana/grafana-oss
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-obtracking-debug-grafana
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-obtracking-debug-grafana
+  namespace: kube-ops
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: managed-premium
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: obtracking-debug-grafana
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+  selector:
+    name: obtracking-debug-grafana

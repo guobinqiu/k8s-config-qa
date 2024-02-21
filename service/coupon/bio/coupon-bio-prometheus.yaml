@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coupon-bio-prometheus
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: coupon-bio-prometheus
+  template:
+    metadata:
+      labels:
+        name: coupon-bio-prometheus
+    spec:
+      securityContext:
+        fsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      containers:
+      - name: prometheus
+        image: prom/prometheus
+        args:
+          - "--config.file=/etc/prometheus/prometheus.yml"
+          - "--web.external-url=https://cn-cvc-uat.ap.loreal.intra/bio/prometheus/"
+          - "--storage.tsdb.retention.time=7d"
+          - "--storage.tsdb.path=/data"
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: config
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: config
+        configMap:
+          name: coupon-bio-prometheus-configmap
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-coupon-bio-prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coupon-bio-prometheus
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 9090
+    targetPort: 9090
+  selector:
+    name: coupon-bio-prometheus
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coupon-bio-prometheus-configmap
+  namespace: kube-ops
+data:
+  prometheus.yml: |-
+    global:
+      scrape_interval:     15s
+      evaluation_interval: 15s
+
+    rule_files:
+      # - "first.rules"
+      # - "second.rules"
+
+    scrape_configs:
+      - job_name: coupon-bio-api
+        metrics_path: /lrl/metrics
+        scrape_interval: 10s
+        static_configs:
+        - targets:
+          - coupon-bio-api
+        basic_auth:
+          username: admin
+          password: admin
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-coupon-bio-prometheus
+  namespace: kube-ops
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: managed-premium
+  resources:
+    requests:
+      storage: 50Gi

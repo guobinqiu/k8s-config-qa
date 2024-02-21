@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-env
+  namespace: kube-ops
+type: Opaque
+stringData:
+  AZURE_ENVIRONMENT: 
+  AZURE_CLIENT_ID: 
+  AZURE_CLIENT_SECRET: 
+  AZURE_TENANT_ID: 

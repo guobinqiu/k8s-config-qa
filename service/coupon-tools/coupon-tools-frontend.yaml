@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coupon-tools-frontend
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: coupon-tools-frontend
+  template:
+    metadata:
+      labels:
+        name: coupon-tools-frontend
+    spec:
+      containers:
+      - name: coupon-tools-frontend
+        image: stagingacr.azurecr.cn/coupon-tools-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coupon-tools-frontend
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  selector:
+    name: coupon-tools-frontend

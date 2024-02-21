@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coupon-bio-grafana
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: coupon-bio-grafana
+  template:
+    metadata:
+      labels:
+        name: coupon-bio-grafana
+    spec:
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+          - 0
+      containers:
+      - name: grafana
+        image: grafana/grafana-oss
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/grafana
+        - name: config
+          mountPath: /etc/grafana
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-coupon-bio-grafana
+      - name: config
+        configMap:
+          name: coupon-bio-grafana-configmap
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-coupon-bio-grafana
+  namespace: kube-ops
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: managed-premium
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coupon-bio-grafana
+  namespace: kube-ops
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+  selector:
+    name: coupon-bio-grafana
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coupon-bio-grafana-configmap
+  namespace: kube-ops
+data:
+  grafana.ini: |-
+    [server]
+    root_url = https://cn-cvc-uat.ap.loreal.intra/bio/grafana
