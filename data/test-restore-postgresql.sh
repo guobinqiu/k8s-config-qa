@@ -1,7 +1,7 @@
 #!/bin/bash
 snapshotName=$1
 diskName="$snapshotName-$(date +%Y%m%d%H%M%S)"
-RG=$(az aks show --resource-group couponResourceGroup --name stagingAKSCluster --query nodeResourceGroup -o tsv)
+RG=$(az aks show --resource-group yourResourceGroup --name yourClusterName --query nodeResourceGroup -o tsv)
 az disk create --resource-group $RG --name $diskName --source $snapshotName
 diskID=$(az disk show --resource-group $RG --name $diskName --query id -o tsv)
 cat <<-EOF | kubectl create -f -

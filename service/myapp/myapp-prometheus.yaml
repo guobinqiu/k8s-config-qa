@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coupon-bio-prometheus
+  name: myapp-prometheus
   namespace: kube-ops
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: coupon-bio-prometheus
+      name: myapp-prometheus
   template:
     metadata:
       labels:
-        name: coupon-bio-prometheus
+        name: myapp-prometheus
     spec:
       securityContext:
         fsGroup: 65534
@@ -22,7 +22,7 @@ spec:
         image: prom/prometheus
         args:
           - "--config.file=/etc/prometheus/prometheus.yml"
-          - "--web.external-url=https://cn-cvc-uat.ap.loreal.intra/bio/prometheus/"
+          - "--web.external-url=https://yourdomain/myapp/prometheus/"
           - "--storage.tsdb.retention.time=7d"
           - "--storage.tsdb.path=/data"
         ports:
@@ -36,15 +36,15 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: coupon-bio-prometheus-configmap
+          name: myapp-prometheus-configmap
       - name: data
         persistentVolumeClaim:
-          claimName: pvc-coupon-bio-prometheus
+          claimName: pvc-myapp-prometheus
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: coupon-bio-prometheus
+  name: myapp-prometheus
   namespace: kube-ops
 spec:
   type: ClusterIP
@@ -53,12 +53,12 @@ spec:
     port: 9090
     targetPort: 9090
   selector:
-    name: coupon-bio-prometheus
+    name: myapp-prometheus
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: coupon-bio-prometheus-configmap
+  name: myapp-prometheus-configmap
   namespace: kube-ops
 data:
   prometheus.yml: |-
@@ -71,12 +71,11 @@ data:
       # - "second.rules"
 
     scrape_configs:
-      - job_name: coupon-bio-api
-        metrics_path: /lrl/metrics
+      - job_name: myapp
         scrape_interval: 10s
         static_configs:
         - targets:
-          - coupon-bio-api
+          - myapp
         basic_auth:
           username: admin
           password: admin
@@ -84,7 +83,7 @@ data:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-coupon-bio-prometheus
+  name: pvc-myapp-prometheus
   namespace: kube-ops
 spec:
   accessModes:

@@ -1,14 +1,14 @@
 az network vnet subnet create \
-  --name EC2QDLAPPSN02 \
-  --resource-group EC2QDLRG01 \
+  --name yourSubnetName \
+  --resource-group yourResourceGroup \
   --address-prefixes 10.162.66.240/28 \
-  --vnet-name EC2QDLVN01
+  --vnet-name yourVNetName
 
-SUBNET_ID=$(az network vnet subnet show --resource-group EC2QDLRG01 --vnet-name EC2QDLVN01 --name EC2QDLAPPSN02 --query id -o tsv)
+SUBNET_ID=$(az network vnet subnet show --resource-group yourResourceGroup --vnet-name yourVNetName --name yourSubnetName --query id -o tsv)
 
 az aks create \
-    --resource-group couponResourceGroup \
-    --name stagingAKSCluster \
+    --resource-group yourResourceGroup \
+    --name yourClusterName \
     --node-count 3 \
     --node-vm-size Standard_DS2_v2 \
     --network-plugin kubenet \
@@ -17,14 +17,14 @@ az aks create \
     --pod-cidr 10.244.0.0/16 \
     --docker-bridge-address 172.17.0.1/16 \
     --vnet-subnet-id $SUBNET_ID \
-    --service-principal 3f6090be-07d0-4ad1-b610-b6ef2bb5f090 \
-    --client-secret 7e_NXvlUE61.3iLE5od4_z7LYSgHrI.z_Z
+    --service-principal *** \
+    --client-secret ***
 
-az aks nodepool list --cluster-name stagingAKSCluster --resource-group couponResourceGroup
+az aks nodepool list --cluster-name yourClusterName --resource-group yourResourceGroup
 
 az aks nodepool add \
-    --cluster-name stagingAKSCluster \
-    --resource-group couponResourceGroup \
+    --cluster-name yourClusterName \
+    --resource-group yourResourceGroup \
     --name systempool \
     --node-count 1 \
     --node-taints CriticalAddonsOnly=true:NoSchedule \
@@ -32,19 +32,14 @@ az aks nodepool add \
 
 az aks nodepool scale \
     --name systempool \
-    --cluster-name stagingAKSCluster \
-    --resource-group couponResourceGroup \
+    --cluster-name yourClusterName \
+    --resource-group yourResourceGroup \
     --node-count 3
 
 az aks nodepool add \
     --name nodepoolapp \
-    --resource-group couponResourceGroup \
-    --cluster-name stagingAKSCluster \
+    --resource-group yourResourceGroup \
+    --cluster-name yourClusterName \
     --node-vm-size Standard_D16s_v3 \
     --node-count 1 \
     --mode user
-
-az aks nodepool delete \
-    --cluster-name stagingAKSCluster \
-    --name nodepool1 \
-    --resource-group couponResourceGroup

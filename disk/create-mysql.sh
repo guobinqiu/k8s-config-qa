@@ -1,5 +1,5 @@
 #!/bin/bash
-RG=$(az aks show --resource-group couponResourceGroup --name stagingAKSCluster --query nodeResourceGroup -o tsv)
+RG=$(az aks show --resource-group yourResourceGroup --name yourClusterName --query nodeResourceGroup -o tsv)
 diskName=mysql-origin
 az disk create \
   --resource-group $RG \

@@ -2,7 +2,7 @@ az extension add --name aks-preview
 az feature register --name EnableAzureDiskFileCSIDriver --namespace Microsoft.ContainerService --subscription d67a2f1d-59a1-417a-801d-a987246185b3
 
 clusterName=tidbCluster
-resourceGroup=couponResourceGroup
+resourceGroup=yourResourceGroup
 
 #install tidb cluster
 az aks create \

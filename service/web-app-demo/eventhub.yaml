@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Pod
-metadata:
-  name: eventhub
-spec:
-  containers:
-  - name: eventhub
-    image: qiuguobin/web-app-demo:latest
-    args: [/bin/sh, -c, go run ./sas/consumer.go]

@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coupon-bio-grafana
+  name: myapp-grafana
   namespace: kube-ops
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: coupon-bio-grafana
+      name: myapp-grafana
   template:
     metadata:
       labels:
-        name: coupon-bio-grafana
+        name: myapp-grafana
     spec:
       securityContext:
         fsGroup: 472
@@ -30,15 +30,15 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: pvc-coupon-bio-grafana
+          claimName: pvc-myapp-grafana
       - name: config
         configMap:
-          name: coupon-bio-grafana-configmap
+          name: myapp-grafana-configmap
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-coupon-bio-grafana
+  name: pvc-myapp-grafana
   namespace: kube-ops
 spec:
   accessModes:
@@ -51,7 +51,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: coupon-bio-grafana
+  name: myapp-grafana
   namespace: kube-ops
 spec:
   type: ClusterIP
@@ -60,14 +60,14 @@ spec:
     port: 3000
     targetPort: 3000
   selector:
-    name: coupon-bio-grafana
+    name: myapp-grafana
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: coupon-bio-grafana-configmap
+  name: myapp-grafana-configmap
   namespace: kube-ops
 data:
   grafana.ini: |-
     [server]
-    root_url = https://cn-cvc-uat.ap.loreal.intra/bio/grafana
+    root_url = https://yourdomain/myapp/grafana

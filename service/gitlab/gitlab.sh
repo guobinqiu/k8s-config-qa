@@ -1,5 +1,5 @@
 #!/bin/bash
-RG=$(az aks show --resource-group couponResourceGroup --name stagingAKSCluster --query nodeResourceGroup -o tsv)
+RG=$(az aks show --resource-group yourResourceGroup --name yourClusterName --query nodeResourceGroup -o tsv)
 diskName=gitlab-origin
 diskURI=$(az disk show --name $diskName --resource-group $RG --query id -o tsv)
 cat <<-EOF | kubectl apply -f -
@@ -41,7 +41,7 @@ spec:
         - name: GITLAB_ROOT_EMAIL
           value: qracle@126.com
         - name: GITLAB_HOST
-          value: uat-cn.loreal.wans
+          value: uat-cn.xxxxx.wans
         - name: GITLAB_RELATIVE_URL_ROOT
           value: /gitlab
         - name: GITLAB_PORT

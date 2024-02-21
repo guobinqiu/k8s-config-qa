@@ -9,46 +9,6 @@ metadata:
 #    haproxy-ingress.github.io/timeout-http-request: 30s
 spec:
   rules:
-  - host: coupon-tools-backend.azk8s.cn
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: coupon-tools-backend
-            port:
-              number: 80
-  - host: coupon-tools-frontend.azk8s.cn
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: coupon-tools-frontend
-            port:
-              number: 80
-  - host: target-tracking-facade.azk8s.cn
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: target-tracking-facade
-            port:
-              number: 80
-  - host: keycloak.azk8s.cn
-    http:
-      paths:
-      - path: /auth
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: keycloak
-            port:
-              number: 8080
   - host: grafana.azk8s.cn
     http:
       paths:
@@ -69,36 +29,6 @@ spec:
             name: prometheus-prometheus-oper-prometheus
             port:
               number: 9090
-  - host: coupon-bio-api.azk8s.cn
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: coupon-bio-api
-            port:
-              number: 80
-  - host: coupon-lan-api.azk8s.cn
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: coupon-lan-api
-            port:
-              number: 80
-  #  - host: cn-cvc-uat.ap.loreal.intra
-  #    http:
-  #      paths:
-  #      - path: /
-  #        pathType: ImplementationSpecific
-  #        backend:
-  #          service:
-  #            name: web-app-demo
-  #            port:
-  #              number: 3001
   - host: gitlab.azk8s.cn
     http:
       paths:
@@ -107,16 +37,6 @@ spec:
         backend:
           service:
             name: gitlab
-            port:
-              number: 80
-  - host: accountservice.azk8s.cn
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: accountservice
             port:
               number: 80
   - host: kibana.azk8s.cn
@@ -129,16 +49,6 @@ spec:
             name: kibana
             port:
               number: 5601
-#  - host: web-app-demo.azk8s.cn
-#    http:
-#      paths:
-#      - path: /
-#        pathType: ImplementationSpecific
-#        backend:
-#          service:
-#            name: web-app-demo
-#            port:
-#              number: 3001
   - host: jenkins.azk8s.cn
     http:
       paths:
@@ -149,73 +59,7 @@ spec:
             name: jenkins
             port:
               number: 8080
-#  - host: k8s-dashboard.azk8s.cn
-#    http:
-#      paths:
-#      - path: /
-#        pathType: ImplementationSpecific
-#        backend:
-#          service:
-#            name: kubernetes-dashboard
-#            port:
-#              number: 80
-  - host: obtracking.azk8s.cn
-    http:
-      paths:
-#      - path: /
-#        pathType: Prefix
-#        backend:
-#          service:
-#            name: obtracking
-#            port:
-#              number: 7878
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: target-tracking-api
-            port:
-              number: 7878
-  - host: obtrackingdoc.azk8s.cn
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: obtracking-debug-doc
-            port:
-              number: 6060
-  - host: ebadoc.azk8s.cn
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: eba-doc
-            port:
-              number: 6060
-#  - host: target-tracking-lan.azk8s.cn
-#    http:
-#      paths:
-#      - path: /
-#        pathType: ImplementationSpecific
-#        backend:
-#          service:
-#            name: target-tracking-api-lan
-#            port:
-#              number: 7878
-#  - host: target-tracking-ysl.azk8s.cn
-#    http:
-#      paths:
-#      - path: /
-#        pathType: ImplementationSpecific
-#        backend:
-#          service:
-#            name: target-tracking-api-ysl
-#            port:
-#              number: 7878
+            number: 7878
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -229,49 +73,24 @@ metadata:
 spec:
   tls:
   - hosts:
-    - cn-cvc-uat.ap.loreal.intra
+    - yourdomain
     secretName: tls-secret #kubectl create secret tls tls-secret --key ./cn-cvc-uat.key --cert ./cn-cvc-uat.crt --namespace kube-ops
   rules:
-  - host: cn-cvc-uat.ap.loreal.intra
+  - host: yourdomain
     http:
       paths:
-      - path: /lan
+      - path: /myapp
         pathType: Prefix
         backend:
           service:
-            name: coupon-lan-api
+            name: myapp
             port:
               number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: https-ingress2
-  namespace: kube-ops
-  annotations:
-    kubernetes.io/ingress.class: haproxy
-    haproxy-ingress.github.io/ssl-redirect: "true"
-spec:
-  tls:
-  - hosts:
-    - cn-cvc-uat.ap.loreal.intra
-    secretName: tls-secret
-  rules:
-  - host: cn-cvc-uat.ap.loreal.intra
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: coupon-bio-api
-            port:
-              number: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: coupon-lan-grafana-ingress
+  name: myapp-grafana-ingress
   namespace: kube-ops
   annotations:
     kubernetes.io/ingress.class: haproxy
@@ -280,139 +99,40 @@ metadata:
 spec:
   tls:
   - hosts:
-    - cn-cvc-uat.ap.loreal.intra
+    - yourdomain
     secretName: tls-secret
   rules:
-  - host: cn-cvc-uat.ap.loreal.intra
+  - host: yourdomain
     http:
       paths:
-      - path: /lan/grafana
+      - path: /myapp/grafana
         pathType: Prefix
         backend:
           service:
-            name: coupon-lan-grafana
+            name: myapp-grafana
             port:
               number: 3000
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: coupon-lan-prometheus-ingress
+  name: myapp-prometheus-ingress
   namespace: kube-ops
   annotations:
     kubernetes.io/ingress.class: haproxy
 spec:
   tls:
   - hosts:
-    - cn-cvc-uat.ap.loreal.intra
+    - yourdomain
     secretName: tls-secret
   rules:
-  - host: cn-cvc-uat.ap.loreal.intra
+  - host: yourdomain
     http:
       paths:
-      - path: /lan/prometheus
+      - path: /myapp/prometheus
         pathType: Prefix
         backend:
           service:
-            name: coupon-lan-prometheus
+            name: myapp-prometheus
             port:
               number: 9090
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: coupon-bio-grafana-ingress
-  namespace: kube-ops
-  annotations:
-    kubernetes.io/ingress.class: haproxy
-    haproxy-ingress.github.io/ssl-redirect: "true"
-    haproxy-ingress.github.io/rewrite-target: /
-spec:
-  tls:
-  - hosts:
-    - cn-cvc-uat.ap.loreal.intra
-    secretName: tls-secret
-  rules:
-  - host: cn-cvc-uat.ap.loreal.intra
-    http:
-      paths:
-      - path: /bio/grafana
-        pathType: Prefix
-        backend:
-          service:
-            name: coupon-bio-grafana
-            port:
-              number: 3000
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: coupon-bio-prometheus-ingress
-  namespace: kube-ops
-  annotations:
-    kubernetes.io/ingress.class: haproxy
-spec:
-  tls:
-  - hosts:
-    - cn-cvc-uat.ap.loreal.intra
-    secretName: tls-secret
-  rules:
-  - host: cn-cvc-uat.ap.loreal.intra
-    http:
-      paths:
-      - path: /bio/prometheus
-        pathType: Prefix
-        backend:
-          service:
-            name: coupon-bio-prometheus
-            port:
-              number: 9090
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: obtracking-doc-ingress
-  namespace: kube-ops
-  annotations:
-    kubernetes.io/ingress.class: haproxy
-    haproxy-ingress.github.io/ssl-redirect: "true"
-    haproxy-ingress.github.io/auth-type: basic
-    haproxy-ingress.github.io/auth-realm: "obtracking doc"
-    haproxy-ingress.github.io/auth-secret: obtracking-doc-secret #kubectl create secret generic obtracking-doc-secret --from-literal=auth=admin::1234qwer -n kube-ops
-spec:
-  tls:
-  - hosts:
-    - cn-cvc-uat.ap.loreal.intra
-    secretName: tls-secret
-  rules:
-  - host: cn-cvc-uat.ap.loreal.intra
-    http:
-      paths:
-      - path: /pkg
-        pathType: Prefix
-        backend:
-          service:
-            name: obtracking-debug-doc
-            port:
-              number: 6060
-      - path: /lib/godoc
-        pathType: Prefix
-        backend:
-          service:
-            name: obtracking-debug-doc
-            port:
-              number: 6060
-      - path: /search
-        pathType: Prefix
-        backend:
-          service:
-            name: obtracking-debug-doc
-            port:
-              number: 6060
-      - path: /src
-        pathType: Prefix
-        backend:
-          service:
-            name: obtracking-debug-doc
-            port:
-              number: 6060

@@ -1,1 +1,1 @@
-az acr create --resource-group couponResourceGroup --name stagingACR --sku Basic
+az acr create --resource-group yourResourceGroup --name stagingACR --sku Basic
