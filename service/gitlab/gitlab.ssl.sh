@@ -42,7 +42,7 @@ spec:
           value: qracle@126.com
         - name: GITLAB_HOST
 #          value: gitlab.buf.cloud
-          value: uat-cn.xxxxx.wans
+          value: yourdomain
         - name: GITLAB_RELATIVE_URL_ROOT
           value: /gitlab
         - name: GITLAB_PORT

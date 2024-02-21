@@ -1,4 +1,4 @@
 grafana:
   grafana.ini:
     server:
-      root_url: https://uat-cn.xxxxx.wans/grafana
+      root_url: https://yourdomain/grafana

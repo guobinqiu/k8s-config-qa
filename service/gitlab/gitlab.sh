@@ -41,7 +41,7 @@ spec:
         - name: GITLAB_ROOT_EMAIL
           value: qracle@126.com
         - name: GITLAB_HOST
-          value: uat-cn.xxxxx.wans
+          value: yourdomain
         - name: GITLAB_RELATIVE_URL_ROOT
           value: /gitlab
         - name: GITLAB_PORT

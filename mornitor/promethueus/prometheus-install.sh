@@ -4,6 +4,6 @@ helm install prometheus stable/prometheus-operator --namespace kube-ops \
 --set prometheus.service.type=ClusterIP \
 --set grafana.service.type=ClusterIP \
 --set grafana.service.port=3000 \
---set prometheus.prometheusSpec.externalUrl=https://uat-cn.xxxxx.wans/prometheus/ \
+--set prometheus.prometheusSpec.externalUrl=https://yourdomain/prometheus/ \
 -f grafana.yaml
-#--set grafana."grafana\.ini".server.root_url=https://uat-cn.xxxxx.wans/grafana
+#--set grafana."grafana\.ini".server.root_url=https://yourdomain/grafana
