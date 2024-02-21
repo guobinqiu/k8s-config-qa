@@ -1,6 +1,6 @@
 # K8S-CONFIG-QA
 
-k8s的一些公共服务配置demo
+AKS的一些公共服务配置demo
 
 # 优化项
 
